@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#030611" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Fixed: Optimized Title (50-60 chars) -->
+  <title>Hymn Vault - Christian Hymns, Chords, Lyrics & Praise Songs</title>
+  
+  <meta name="google-site-verification" content="AJHEbNkxNvoqLoyz4tWcFlmKCZzfYsXXfun0DKkMKwU" />
+  
+  <!-- Fixed: Self-referencing Canonical URL without /index.html -->
+  <link rel="canonical" href="https://hymnvault.web.app/" />
+  <meta name="description" content="Explore praise and worship hymns with chords, lyrics, search and filters. Download hymn PDFs and sing with confidence—any time." />
+
+  <!-- Fixed: Open Graph / Facebook Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hymnvault.web.app/" />
+  <meta property="og:title" content="Hymn Vault - Christian Hymns, Chords & Lyrics" />
+  <meta property="og:description" content="Explore praise and worship hymns with chords, lyrics, search and filters. Download hymn PDFs." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200" />
+
+  <!-- Fixed: Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hymn Vault - Christian Hymns, Chords & Lyrics" />
+  <meta name="twitter:description" content="Explore praise and worship hymns with chords, lyrics, search and filters. Download hymn PDFs." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <!-- Load Google Fonts without blocking first render -->
+  <link
+    rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=JetBrains+Mono:wght@500;700&family=Poppins:wght@400;500;600&display=swap"
+    as="style"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=JetBrains+Mono:wght@500;700&family=Poppins:wght@400;500;600&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=JetBrains+Mono:wght@500;700&family=Poppins:wght@400;500;600&display=swap"
+    />
+  </noscript>
+
+  <link rel="preload" href="/style.css" as="style" />
+<link rel="stylesheet" href="/style.css" media="print" onload="this.media='all'" />
+<noscript>
+  <link rel="stylesheet" href="/style.css" />
+</noscript>
+
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Firebase (required by script.js) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js" defer></script>
+
+  <!-- PDF generation libraries (jsPDF + html2canvas) -->
+  
+  <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
+
+  <!-- ad/tracking scripts -->
+  <script>
+    (function () {
+      var loaded = false;
+      function loadAds() {
+        if (loaded) return;
+        loaded = true;
+
+        var s1 = document.createElement('script');
+        s1.src = "https://pl29628493.effectivecpmnetwork.com/8d/dd/1e/8ddd1e216a848c57801e7b34b5a5cdb4.js";
+        s1.defer = true;
+        document.head.appendChild(s1);
+
+        var inline = document.createElement('script');
+        inline.text = "window.atOptions={key:'70fb2cd128b7445530407c97abfea77d',format:'iframe',height:60,width:468,params:{}};";
+        document.head.appendChild(inline);
+
+        var s2 = document.createElement('script');
+        s2.src = "https://www.highperformanceformat.com/70fb2cd128b7445530407c97abfea77d/invoke.js";
+        s2.async = true;
+        document.head.appendChild(s2);
+      }
+
+      window.addEventListener('scroll', loadAds, { once: true, passive: true });
+      window.addEventListener('mousemove', loadAds, { once: true, passive: true });
+      window.addEventListener('touchstart', loadAds, { once: true, passive: true });
+      window.addEventListener('click', loadAds, { once: true, passive: true });
+    })();
+  </script>
+
+  <script src="/firebase-init.js" defer></script>
+<script src="/script.js" defer></script>
+</head>
+<body>
+
+  <div id="loader">
+    <div class="loader-bg"></div>
+    <div class="verse-container">
+      <p class="verse-text">"Great is the LORD and most worthy of praise; his greatness no one can fathom"</p>
+      <p class="reference-text">- Psalm 145:3 -</p>
+      <p class="verse-text">"ස්වාමීන්වහන්සේ උතුම්ය, බොහෝ සෙයින් ප්‍රශංසා ලැබිය යුතය; උන්වහන්සේගේ උතුම්කමද සොයා දැනගත නොහැකිය।"</p>
+      <p class="reference-text">- ගීතාවලිය 145:3 -</p>
+    </div>
+  </div>
+
+  <main>
+  <div class="app-container">
+
+    <div class="sidebar-left">
+      <div class="brand">Hymnvault</div>
+      <div class="nav-links">
+        <a href="/" onclick="goHome();">🏠 Home</a>
+        <a href="#connectSection" onclick="contactFromDrawerScrollToConnect(); return false;">📞 Contact Us</a>
+      </div>
+
+      <div class="filter-section" style="margin-top:15px;">
+        <h3>Filters</h3>
+        <select id="artist" onchange="loadSongs()">
+          <option value="">🎤 Artists Name</option>
+          <option value="All Artists">All Artists</option>
+        </select>
+        <select id="language" onchange="loadSongs()">
+          <option value="">🌐 All Languages</option>
+          <option value="Sinhala">Sinhala</option>
+          <option value="English">English</option>
+          <option value="Tamil">Tamil</option>
+        </select>
+        <select id="chord" onchange="loadSongs()">
+          <option value="">🎸 Any Key</option>
+          <option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="A">A</option><option value="B">B</option>
+          <option value="Cm">Cm</option><option value="Dm">Dm</option><option value="Em">Em</option><option value="Fm">Fm</option><option value="Gm">Gm</option><option value="Am">Am</option><option value="Bm">Bm</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="hero">
+        <!-- Fixed: Added descriptive Alt Text for SEO -->
+        <img
+          class="hero-img"
+          src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200"
+          alt="Christian Praise and Worship background"
+          width="1200"
+          height="800"
+          decoding="async"
+          fetchpriority="high"
+          loading="eager"
+        />
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <!-- Fixed: Changed H2 to H1 for primary page title -->
+        <!-- SEO Bot සඳහා පමණක් කියවිය හැකි, සැඟවුණු H1 tag එක -->
+<h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">Praise the LORD - Hymn Vault</h1>
+
+<!-- ඔබගේ මුල් Design එකට අදාළ H2 tag එක -->
+<h2 id="heroTitle">Praise the LORD</h2>
+      </div>
+
+      <div id="searchArea" class="search-wrapper">
+        <input id="search" placeholder="🔍 Search by title..." oninput="scheduleLoadSongs()">
+        <button class="btn-search" onclick="loadSongs()">Search</button>
+      </div>
+
+      <div id="songs" class="songs-grid"></div>
+
+      <div id="requestSection" class="card request-box">
+        <h3 style="margin-top:0; font-family:'Cinzel',serif; color:var(--accent); font-weight:600;">🙏 Request a Hymn</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <input id="reqName" placeholder="Your Name">
+          <input id="reqSong" placeholder="Hymn Title / Artist">
+          <textarea id="reqMsg" placeholder="Message or Chords?" rows="3"></textarea>
+          <button onclick="sendRequest()">Send via WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-right">
+      <div class="right-panel-box">
+        <h3>🔥 Trending This Week</h3>
+        <a href="/hymn/2ZGsAKYS9ATFEw2N64eZ" class="trending-item" style="display:block; text-decoration:none;">
+          <span>ඇයි ජේසුනි මා නිසා</span>
+          <small>Pastor Rohan Munasinghe</small>
+        </a>
+        <a href="/hymn/2qW434iKe8GZcLO0GN5G" class="trending-item" style="display:block; text-decoration:none;">
+          <span>Aradhanai Nayagar</span>
+          <small>Alwin Thomas</small>
+        </a>
+        <a href="/hymn/Nnybg6eKuLVltBRGZEKP" class="trending-item" style="display:block; text-decoration:none;">
+          <span>මා කැඳවූ දෙවිඳේ</span>
+          <small>Voice Worship Band</small>
+        </a>
+      </div>
+
+      <div class="right-panel-box">
+        <h3>📖 Daily Verse</h3>
+        <div class="verse-box" id="dailyVerseBox">
+          Loading scripture...
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </main>
+
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true" onclick="closeMobileNav()"></div>
+
+  <button class="mobile-hamburger" id="mobileHamburger" aria-label="Open menu" onclick="toggleMobileNav(true)" type="button">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="mobile-side-drawer" id="mobileSideDrawer" aria-hidden="true">
+    <div class="mobile-side-drawer-header">
+      <div class="mobile-side-brand-wrap">
+        <div class="mobile-side-brand">HYMNVAULT</div>
+      </div>
+      <button class="mobile-drawer-close" type="button" aria-label="Close menu" onclick="toggleMobileNav(false)">&times;</button>
+    </div>
+
+    <div class="mobile-side-drawer-section">
+      <a class="mobile-drawer-link" href="/" onclick="goHome();">🏠 Home</a>
+      <a class="mobile-drawer-link" href="#connectSection" onclick="contactFromDrawerScrollToConnect(); return false;">📞 Contact Us</a>
+    </div>
+
+    <div class="mobile-side-drawer-section">
+      <h3>Filters</h3>
+      <select id="m-artist" onchange="syncMobileFilters('artist')">
+        <option value="">🎤 Artists Name</option>
+        <option value="All Artists">All Artists</option>
+      </select>
+      <select id="m-language" onchange="syncMobileFilters('language')">
+        <option value="">🌐 All Languages</option>
+        <option value="Sinhala">Sinhala</option>
+        <option value="English">English</option>
+        <option value="Tamil">Tamil</option>
+      </select>
+      <select id="m-chord" onchange="syncMobileFilters('chord')">
+        <option value="">🎸 Any Key</option>
+        <option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="A">A</option><option value="B">B</option>
+        <option value="Cm">Cm</option><option value="Dm">Dm</option><option value="Em">Em</option><option value="Fm">Fm</option><option value="Gm">Gm</option><option value="Am">Am</option><option value="Bm">Bm</option>
+      </select>
+      <button class="mobile-drawer-apply" type="button" onclick="toggleMobileNav(false); toggleFilterDrawer(true)">⚙️ Open Filter Panel</button>
+    </div>
+
+    <div class="mobile-side-drawer-section">
+      <div class="mobile-trending-inline">
+        <h3>🔥 Trending This Week</h3>
+        <a href="/hymn/2ZGsAKYS9ATFEw2N64eZ" class="trending-item" style="display:block; text-decoration:none;"><span>ඇයි ජේසුනි මා නිසා</span><small>Pastor Rohan Munasinghe</small></a>
+        <a href="/hymn/2qW434iKe8GZcLO0GN5G" class="trending-item" style="display:block; text-decoration:none;"><span>Aradhanai Nayagar</span><small>Alwin Thomas</small></a>
+        <a href="/hymn/Nnybg6eKuLVltBRGZEKP" class="trending-item" style="display:block; text-decoration:none;"><span>මා කැඳවූ දෙවිඳේ</span><small>Voice Worship Band</small></a>
+      </div>
+
+      <div class="mobile-daily-inline">
+        <h3>📖 Daily Verse</h3>
+        <!-- Fixed: Changed duplicate ID to mobileDailyVerseBox -->
+        <div class="verse-box" id="mobileDailyVerseBox">Loading scripture...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-nav-bar">
+    <div class="mobile-nav-item active" onclick="goHome()">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home
+    </div>
+    <div class="mobile-nav-item" onclick="document.getElementById('requestSection').scrollIntoView({behavior:'smooth'})">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Request
+    </div>
+    <div class="mobile-nav-item" onclick="openContact()">
+      <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Contact
+    </div>
+  </div>
+
+  <div id="legalOverlay" class="legal-overlay" aria-hidden="true"></div>
+
+  <section id="privacyView" class="legal-view" aria-labelledby="privacyTitle" aria-hidden="true" role="dialog">
+    <header class="legal-header">
+      <h2 id="privacyTitle">Privacy Policy</h2>
+      <button class="legal-close" type="button" aria-label="Close" onclick="closePrivacyTerms()">&times;</button>
+    </header>
+    <div class="legal-body">
+      <p><strong>HymnVault</strong> ("we", "us") values your trust. This Privacy Policy explains how we collect, use, and protect information when you use our hymn portal.</p>
+      <h3>1. Information We May Collect</h3>
+      <ul>
+        <li>Optional details you provide through request forms (e.g., name and hymn title).</li>
+        <li>Device/browser information such as approximate location and usage patterns (standard web logs).</li>
+      </ul>
+
+      <h3>2. How We Use Information</h3>
+      <ul>
+        <li>To respond to your hymn requests and messages.</li>
+        <li>To improve site performance and content discovery.</li>
+      </ul>
+
+      <h3>3. Sharing of Information</h3>
+      <p>We do not sell your personal information. We may share limited information only when required for service operation or legal compliance.</p>
+
+      <h3>4. Security</h3>
+      <p>We use reasonable technical and organizational safeguards to protect information. However, no method of transmission over the internet is 100% secure.</p>
+
+      <h3>5. Your Choices</h3>
+      <p>You may request updates or removal of your provided information by contacting us through the site's contact options.</p>
+
+      <h3>Contact</h3>
+      <p>If you have questions about this policy, please reach us via the Connect options in the footer.</p>
+
+      <p class="legal-updated"><strong>Last updated:</strong> 2026</p>
+    </div>
+  </section>
+
+  <section id="termsView" class="legal-view" aria-labelledby="termsTitle" aria-hidden="true" role="dialog">
+    <header class="legal-header">
+      <h2 id="termsTitle">Terms of Service</h2>
+      <button class="legal-close" type="button" aria-label="Close" onclick="closePrivacyTerms()">&times;</button>
+    </header>
+    <div class="legal-body">
+      <p>By using HymnVault, you agree to these Terms of Service. If you do not agree, please do not use the website.</p>
+
+      <h3>1. Use of the Service</h3>
+      <ul>
+        <li>You agree to use the service in a respectful and lawful manner.</li>
+        <li>You may browse, search, and request hymns using the provided features.</li>
+      </ul>
+
+      <h3>2. Content and Intellectual Property</h3>
+      <p>All hymn content is provided for worship and educational purposes. Where applicable, copyrights and usage rights belong to their respective owners. If you believe content infringes your rights, contact us and we will review.</p>
+
+      <h3>3. Availability</h3>
+      <p>We work to keep the service available, but we cannot guarantee uninterrupted operation.</p>
+
+      <h3>4. Requests</h3>
+      <p>When you submit a hymn request, you agree that provided details may be used to respond to your request.</p>
+
+      <h3>5. Limitation of Liability</h3>
+      <p>To the maximum extent permitted by law, HymnVault is not liable for any indirect or consequential damages arising from use of the service.</p>
+
+      <p class="legal-updated"><strong>Last updated:</strong> 2026</p>
+    </div>
+  </section>
+
+  <footer class="app-footer" role="contentinfo">
+    <div class="app-footer-inner">
+      <div class="app-footer-col">
+        <div class="app-footer-brand">HYMNVAULT</div>
+        <p class="app-footer-desc">Praise and worship hymns—beautifully organized for your journey.</p>
+      </div>
+
+      <div class="app-footer-col">
+        <div class="app-footer-title">QUICK LINKS</div>
+        <ul class="app-footer-list">
+          <li><a href="/" class="app-footer-action" data-action="home">Home</a></li>
+          <li><a href="#songs" class="app-footer-action" data-action="home" data-home-scroll="#songs">All Hymns</a></li>
+          <li><a href="#requestSection" class="app-footer-action" data-action="scroll" data-scroll-target="#requestSection">Request a Hymn</a></li>
+        </ul>
+      </div>
+
+      <div class="app-footer-col">
+        <div class="app-footer-title">COMMUNITY</div>
+        <ul class="app-footer-list">
+          <!-- Fixed: Removed empty href="#" -->
+          <li><button type="button" class="app-footer-action" data-action="privacy" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;color:inherit;">Privacy Policy</button></li>
+          <li><button type="button" class="app-footer-action" data-action="terms" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;color:inherit;">Terms of Service</button></li>
+        </ul>
+      </div>
+
+      <div class="app-footer-col" id="connectSection">
+        <div class="app-footer-title">CONNECT</div>
+        <div class="app-footer-connect">
+          <a class="app-footer-icon" href="https://www.youtube.com/@HymnVault" target="_blank" rel="noopener noreferrer" aria-label="YouTube HymnVault">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 15l5.2-3L10 9v6zm12-4c0 5-1 6-6 6H8c-5 0-6-1-6-6s1-6 6-6h8c5 0 6 1 6 6z"/>
+            </svg>
+          </a>
+          <a class="app-footer-icon" href="https://web.facebook.com/profile.php?id=61589650372347" target="_blank" rel="noopener noreferrer" aria-label="Facebook HymnVault">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13.5 22v-8h2.7l.4-3H13.5V9.2c0-.9.2-1.5 1.5-1.5h1.6V5c-.3 0-1.4-.1-2.7-.1-2.7 0-4.6 1.7-4.6 4.8V11H6.1v3h2.2v8h5.2z"/>
+            </svg>
+          </a>
+          <a class="app-footer-icon" href="https://wa.me/94769272457" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp HymnVault">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.5 3.5A10 10 0 0 0 4.2 19.3L3 23l3.9-1.2A10 10 0 1 0 20.5 3.5Zm-1.8 15.2c-.2.6-.8.8-1.5.9-.4.1-.9.1-1.4 0-3-.7-5.4-3.1-6.1-6.1-.1-.5-.1-1 .1-1.5.2-.7.5-1.2 1-1.4.2-.1.4-.1.6 0 .2 0 .4.1.5.4l.8 2c.1.3.1.6-.1.8l-.3.4c-.2.2-.2.4 0 .7.3.6 1.1 1.6 2 2.1.2.1.4.1.6 0l.5-.4c.2-.2.5-.3.8-.2l2.1.9c.2.1.4.2.4.5 0 .2 0 .5-.1.7Z"/>
+            </svg>
+          </a>
+        </div>
+        <p class="app-footer-note">Questions, requests, or collaborations—reach out anytime.</p>
+      </div>
+    </div>
+
+    <div class="app-footer-subfooter" aria-label="Footer copyright">
+      <div class="app-footer-copy app-footer-copy-single-line">© Copyright 2026. All Rights Reserved | Designed & Developed by Sharon Malsha</div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      function wireFooterActions(){
+        document.querySelectorAll('.app-footer-action[data-action]').forEach((el)=>{
+          el.addEventListener('click',(e)=>{
+            e.preventDefault();
+            const action = el.getAttribute('data-action');
+            const scrollTarget = el.getAttribute('data-scroll-target');
+            const homeScroll = el.getAttribute('data-home-scroll');
+
+            if(action==='home'){
+              if(homeScroll){
+                goHome();
+                var target = document.querySelector(homeScroll);
+                if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+              }else{
+                goHome();
+                window.scrollTo({top:0, behavior:'smooth'});
+              }
+              return;
+            }
+            if(action==='scroll'){
+              const target = scrollTarget ? document.querySelector(scrollTarget) : null;
+              if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+              return;
+            }
+            if(action==='contact'){ openContact(); return; }
+            if(action==='privacy'){ showPrivacy(); return; }
+            if(action==='terms'){ showTerms(); return; }
+          });
+        });
+      }
+      document.addEventListener('DOMContentLoaded', wireFooterActions);
+    })();
+  </script>
+</body>
+</html>

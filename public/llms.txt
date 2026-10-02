@@ -1,0 +1,5 @@
+# HymnVault AI Guide
+
+Welcome to HymnVault. This website provides a comprehensive collection of Christian hymns, lyrics, and chords.
+
+- [Home Page](https://hymnvault.web.app/)

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<link rel="canonical" href="https://hymnvault.web.app/admin.html" />
+    <title>Admin Panel - Hymnvault</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #1e293b; padding: 30px; border-radius: 20px; border: 1px solid #334155; margin-bottom: 30px; }
+        .manage-container { max-width: 800px; margin: auto; background: #1e293b; padding: 30px; border-radius: 20px; border: 1px solid #334155; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #475569; border-radius: 10px; background: #0f172a; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #f59e0b; border: none; color: #000; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #d97706; }
+        label { font-weight: 600; color: #cbd5e1; display: block; text-align: left; margin-top: 10px; }
+        
+        /* New Custom CSS for Hymn List Management */
+        .hymn-item { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+        .action-buttons { display: flex; gap: 8px; }
+        .btn-edit { width: auto !important; padding: 8px 14px !important; background: #2563eb !important; color: white !important; font-size: 13px !important; border-radius: 6px !important; }
+        .btn-edit:hover { background: #1d4ed8 !important; }
+        .btn-delete { width: auto !important; padding: 8px 14px !important; background: #dc2626 !important; color: white !important; font-size: 13px !important; border-radius: 6px !important; }
+        .btn-delete:hover { background: #b91c1c !important; }
+        .warning-text { color: #f87171; font-size: 13px; margin-top: -5px; margin-bottom: 10px; display: none; font-weight: 500; }
+        .hymns-scroll { max-height: 450px; overflow-y: auto; margin-top: 15px; padding-right: 5px; }
+        /* Scrollbar Styling */
+        .hymns-scroll::-webkit-scrollbar { width: 6px; }
+        .hymns-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+
+        /* Helper buttons for lyrics textarea */
+        .lyrics-helper-container { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 10px; margin-top: 6px; margin-bottom: 6px; }
+        .lyrics-helper-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+        .lyrics-helper-btn { width: auto; flex: 0 0 auto; padding: 8px 12px !important; background: #334155 !important; color: #e2e8f0 !important; font-weight: 700 !important; font-size: 13px !important; border-radius: 10px !important; border: 1px solid #475569 !important; }
+        .lyrics-helper-btn:hover { background: #475569 !important; }
+        .lyrics-helper-btn .lyrics-helper-btn-label { color: #f59e0b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="formTitle">Add New Hymn</h2>
+    
+    <label>Song Title</label>
+    <input id="title" placeholder="Enter song title" oninput="checkDuplicateTitle(this.value)">
+    <div id="titleWarning" class="warning-text">⚠️ This song title already exists in Hymnvault!</div>
+
+    <label>Language</label>
+    <select id="language" onchange="handleLanguageChange(this.value)">
+        <option value="Sinhala">Sinhala</option>
+        <option value="English">English</option>
+        <option value="Tamil">Tamil</option>
+    </select>
+
+    <div id="sinhalaSection">
+        <label>Singlish Title (For Sinhala Hymns Only)</label>
+        <input id="singlishTitle" placeholder="e.g. ai yesuni ma nisa">
+    </div>
+
+    <div id="tamilSection" style="display:none;">
+        <label>Tamil Title (In Tamil Script - Optional)</label>
+        <input id="tamilTitle" placeholder="e.g. என் இயேசுவே">
+    </div>
+
+    <label>Artist</label>
+    <select id="artistSelect" onchange="checkArtist(this.value)">
+        <option value="">-- Select an Artist --</option>
+    </select>
+    
+    <input type="text" id="newArtist" list="artistSuggestions" placeholder="Enter new artist name..." style="display:none;">
+    <datalist id="artistSuggestions"></datalist>
+
+    <label>Key (Chord)</label>
+    <select id="chord">
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="G">G</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="Cm">Cm</option>
+        <option value="Dm">Dm</option>
+        <option value="Em">Em</option>
+        <option value="Fm">Fm</option>
+        <option value="Gm">Gm</option>
+        <option value="Am">Am</option>
+        <option value="Bm">Bm</option>
+    </select>
+
+    <label>Beat (Time Signature)</label>
+    <select id="beat">
+        <option value="4/4">4/4</option>
+        <option value="6/8">6/8</option>
+        <option value="3/4">3/4</option>
+        <option value="2/4">2/4</option>
+        <option value="12/8">12/8</option>
+        <option value="Other">Other</option>
+    </select>
+
+    <label>Lyrics (Use [Chord] and {Section})</label>
+    <div class="lyrics-helper-container" aria-label="Lyrics helper buttons">
+        <div class="lyrics-helper-buttons">
+            <button type="button" class="lyrics-helper-btn" onclick="insertSectionAtCursor('Chorus')"><span class="lyrics-helper-btn-label">Chorus</span></button>
+            <button type="button" class="lyrics-helper-btn" onclick="insertSectionAtCursor('Verse 1')"><span class="lyrics-helper-btn-label">Verse</span></button>
+            <button type="button" class="lyrics-helper-btn" onclick="insertSectionAtCursor('Intro')"><span class="lyrics-helper-btn-label">Intro</span></button>
+            <button type="button" class="lyrics-helper-btn" onclick="insertChordBracketsAtCursor()"><span class="lyrics-helper-btn-label">Chord []</span></button>
+        </div>
+        <div id="diatonicChordButtons" class="lyrics-helper-buttons" style="margin-top: 8px;"></div>
+    </div>
+    <textarea id="lyrics" rows="10" placeholder="{Intro}&#10;[C] [G] [Am] [F]&#10;{Verse 1}&#10;[C] lyrics here..."></textarea>
+
+
+    <button id="saveBtn" onclick="save()">Save to Hymnvault</button>
+    <button id="cancelBtn" onclick="resetForm()" style="background: #64748b; color: white; margin-top: 10px; display: none;">Cancel Edit</button>
+    <button onclick="fixAllSlugs()" style="background: #8b5cf6; margin-top: 15px;">Fix All 100 Slugs Automatically</button>
+    <button onclick="generateSitemap()" style="background: #10b981; margin-top: 15px;">📥 Generate New Sitemap</button>
+</div>
+
+<div class="manage-container">
+    <h2>Manage Existing Hymns <span id="totalCount" style="font-size: 18px; color: #f59e0b; background: #0f172a; padding: 4px 12px; border-radius: 10px; margin-left: 10px;">Total: 0</span></h2>
+    <input id="searchHymn" placeholder="🔍 Search hymns by title, singlish, artist, or lyrics..." oninput="filterHymns()">
+    
+    <div id="hymnsList" class="hymns-scroll">
+        </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBciJKI7vdGu9nFr0bMDuWO9mYUu0yeDCU",
+  authDomain: "hymnvault.firebaseapp.com",
+  projectId: "hymnvault",
+  storageBucket: "hymnvault.firebasestorage.app",
+  messagingSenderId: "397124269230",
+  appId: "1:397124269230:web:d9bd1bfec77c684f76293f",
+  measurementId: "G-QHGW23HV09"
+};
+
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+
+// Global states
+let allHymns = [];
+let editingId = null;
+
+// ආරක්ෂණ පද්ධතිය - ලොග් වෙලාද නැද්ද කියලා බලනවා
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // ලොග් වෙලා නම් විතරක් ඩේටා ලෝඩ් කරනවා
+        loadData();
+    } else {
+        // ලොග් වෙලා නැත්නම් කෙලින්ම ලොගින් පේජ් එකට හරවනවා
+        window.location.href = "login.html";
+    }
+});
+// Fetch and load everything cleanly
+function loadData() {
+    let artistSelect = document.getElementById("artistSelect");
+    let datalist = document.getElementById("artistSuggestions");
+    
+    // Clear dynamic elements to prevent appending errors
+    artistSelect.innerHTML = '<option value="">-- Select an Artist --</option>';
+    datalist.innerHTML = '';
+
+    db.collection("hymns").get().then(snapshot => {
+        allHymns = [];
+        let artists = new Set();
+        
+        snapshot.forEach(doc => {
+            let data = doc.data();
+            data.id = doc.id;
+            allHymns.push(data);
+            if(data.artist) artists.add(data.artist.trim());
+        });
+
+        // Alphabetical Sorting (A to Z)
+        let sortedArtists = Array.from(artists).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        
+        // Populate Dropdown and Datalist Auto-suggestion
+        sortedArtists.forEach(name => {
+            let opt = document.createElement("option");
+            opt.value = name;
+            opt.innerHTML = name;
+            artistSelect.appendChild(opt);
+
+            let dlOpt = document.createElement("option");
+            dlOpt.value = name;
+            datalist.appendChild(dlOpt);
+        });
+        
+        let newOpt = document.createElement("option");
+        newOpt.value = "NEW";
+        newOpt.innerHTML = "+ Add New Artist";
+        artistSelect.appendChild(newOpt);
+        // Update total hymn count
+        document.getElementById("totalCount").innerHTML = "Total: " + allHymns.length;
+        // Display current database entries
+        displayHymns(allHymns);
+    }).catch(error => {
+        console.error("Error loading hymns: ", error);
+    });
+}
+
+// Handle dynamic display based on selected language
+function handleLanguageChange(lang) {
+    let sinhalaSec = document.getElementById("sinhalaSection");
+    let tamilSec = document.getElementById("tamilSection");
+
+    if (lang === "Sinhala") {
+        sinhalaSec.style.display = "block";
+        tamilSec.style.display = "none";
+    } else if (lang === "Tamil") {
+        sinhalaSec.style.display = "none";
+        tamilSec.style.display = "block";
+    } else {
+        sinhalaSec.style.display = "none";
+        tamilSec.style.display = "none";
+    }
+}
+
+function checkArtist(val) {
+    document.getElementById("newArtist").style.display = (val === "NEW") ? "block" : "none";
+}
+
+// Check if song title already exists
+function checkDuplicateTitle(val) {
+    let warning = document.getElementById("titleWarning");
+    if (!val.trim()) {
+        warning.style.display = "none";
+        return;
+    }
+    let isDuplicate = allHymns.some(hymn => 
+        hymn.title && hymn.title.toLowerCase().trim() === val.toLowerCase().trim() && hymn.id !== editingId
+    );
+    warning.style.display = isDuplicate ? "block" : "none";
+}
+
+// Live filter search engine
+function filterHymns() {
+    let query = document.getElementById("searchHymn").value.toLowerCase().trim();
+    let filtered = allHymns.filter(hymn => {
+        return (hymn.title && hymn.title.toLowerCase().includes(query)) ||
+               (hymn.singlish_title && hymn.singlish_title.toLowerCase().includes(query)) ||
+               (hymn.tamil_title && hymn.tamil_title.toLowerCase().includes(query)) ||
+               (hymn.artist && hymn.artist.toLowerCase().includes(query)) ||
+               (hymn.lyrics && hymn.lyrics.toLowerCase().includes(query))
+    });
+    displayHymns(filtered);
+document.getElementById("totalCount").innerHTML = "Filtered: " + filtered.length + " / Total: " + allHymns.length;
+}
+
+// Render list dynamically
+function displayHymns(hymnsArray) {
+    let listContainer = document.getElementById("hymnsList");
+    listContainer.innerHTML = "";
+
+    if (hymnsArray.length === 0) {
+        listContainer.innerHTML = `<p style="text-align:center; color:#94a3b8;">No hymns found.</p>`;
+        return;
+    }
+
+    hymnsArray.forEach(hymn => {
+        let item = document.createElement("div");
+        item.className = "hymn-item";
+        item.innerHTML = `
+            <div>
+                <strong style="color: #f59e0b; font-size: 16px;">${hymn.title}</strong>
+                <span style="color:#cbd5e1; font-size:11px; background:#334155; padding:2px 6px; border-radius:5px; margin-left:5px;">${hymn.language || 'English'}</span><br>
+                <small style="color: #94a3b8;">Artist: ${hymn.artist || 'Unknown'} | Chord: ${hymn.chord || 'N/A'} | Beat: ${hymn.beat || 'N/A'}</small>
+            </div>
+            <div class="action-buttons">
+                <button onclick="editHymn('${hymn.id}')" class="btn-edit">Edit</button>
+                <button onclick="deleteHymn('${hymn.id}')" class="btn-delete">Delete</button>
+            </div>
+        `;
+        listContainer.appendChild(item);
+    });
+}
+
+// Prepare the form for updating existing record
+function editHymn(id) {
+    let hymn = allHymns.find(h => h.id === id);
+    if (!hymn) return;
+
+    editingId = id;
+    document.getElementById("formTitle").innerHTML = "Edit Hymn Controls";
+    document.getElementById("title").value = hymn.title || "";
+    document.getElementById("language").value = hymn.language || "Sinhala";
+    document.getElementById("singlishTitle").value = hymn.singlish_title || "";
+    document.getElementById("tamilTitle").value = hymn.tamil_title || "";
+    document.getElementById("chord").value = hymn.chord || "C";
+    document.getElementById("beat").value = hymn.beat || "4/4";
+    document.getElementById("lyrics").value = hymn.lyrics || "";
+
+    handleLanguageChange(hymn.language || "Sinhala");
+
+    // Pre-select Artist Logic
+    let artistSelect = document.getElementById("artistSelect");
+    let isFound = false;
+    for (let i = 0; i < artistSelect.options.length; i++) {
+        if (artistSelect.options[i].value === hymn.artist) {
+            artistSelect.selectedIndex = i;
+            isFound = true;
+            break;
+        }
+    }
+
+    if (!isFound && hymn.artist) {
+        artistSelect.value = "NEW";
+        document.getElementById("newArtist").value = hymn.artist;
+        document.getElementById("newArtist").style.display = "block";
+    } else {
+        document.getElementById("newArtist").style.display = "none";
+        document.getElementById("newArtist").value = "";
+    }
+
+    // Switch action layout states
+    document.getElementById("saveBtn").innerHTML = "Update Changes";
+    document.getElementById("saveBtn").style.background = "#10b981";
+    document.getElementById("cancelBtn").style.display = "block";
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    checkDuplicateTitle(hymn.title || "");
+}
+
+// Safe Delete Core Function
+function deleteHymn(id) {
+    if (confirm("Are you sure you want to permanently delete this hymn?")) {
+        db.collection("hymns").doc(id).delete().then(() => {
+            alert("Hymn successfully deleted!");
+            loadData();
+            if (editingId === id) resetForm();
+        }).catch(error => {
+            alert("Delete action failed: " + error.message);
+        });
+    }
+}
+
+// Clear state utility
+function resetForm() {
+    editingId = null;
+    document.getElementById("formTitle").innerHTML = "Add New Hymn";
+    document.getElementById("title").value = "";
+    document.getElementById("singlishTitle").value = "";
+    document.getElementById("tamilTitle").value = "";
+    document.getElementById("newArtist").value = "";
+    document.getElementById("newArtist").style.display = "none";
+    document.getElementById("artistSelect").value = "";
+    document.getElementById("language").value = "Sinhala";
+    document.getElementById("chord").value = "C";
+    document.getElementById("beat").value = "4/4";
+    document.getElementById("lyrics").value = "";
+    
+    document.getElementById("saveBtn").innerHTML = "Save to Hymnvault";
+    document.getElementById("saveBtn").style.background = "#f59e0b";
+    document.getElementById("cancelBtn").style.display = "none";
+    document.getElementById("titleWarning").style.display = "none";
+    handleLanguageChange("Sinhala");
+}
+
+function save(){
+    let title = document.getElementById("title").value.trim();
+    if(!title) {
+        alert("Please provide a song title.");
+        return;
+    }
+
+    // Helper buttons must never interfere with saving logic.
+
+
+
+    let selectedArtist = document.getElementById("artistSelect").value;
+    let finalArtist = (selectedArtist === "NEW") ? document.getElementById("newArtist").value.trim() : selectedArtist;
+    
+    let singlishTitle = document.getElementById("singlishTitle").value.toLowerCase().trim();
+    let tamilTitle = document.getElementById("tamilTitle").value.trim();
+    let language = document.getElementById("language").value;
+    let chord = document.getElementById("chord").value;
+    let beat = document.getElementById("beat").value;
+    let lyrics = document.getElementById("lyrics").value;
+
+    // අලුතින් එකතු කළ කොටස: Slug එකක් නිර්මාණය කිරීම
+    let rawForSlug = singlishTitle ? singlishTitle : title;
+    let slug = rawForSlug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+    let payload = {
+        title: title,
+        singlish_title: singlishTitle,
+        tamil_title: tamilTitle, // Saves Tamil translation gracefully
+        artist: finalArtist,
+        language: language,
+        chord: chord,
+        beat: beat,
+        lyrics: lyrics,
+        slug: slug // අලුත් Slug එක Database එකට යැවීම
+    };
+
+    if (editingId) {
+        // Safe Update Execution
+        db.collection("hymns").doc(editingId).set(payload, { merge: true }).then(function(){
+            alert("Hymn Updated Successfully!");
+            resetForm();
+            loadData();
+        }).catch(function(error) {
+            alert("Update Error: " + error.message);
+        });
+    } else {
+        // Safe Create Execution
+        db.collection("hymns").add(payload).then(function(){
+            alert("Hymn Saved Successfully!");
+            resetForm();
+            loadData();
+        }).catch(function(error) {
+            alert("Save Error: " + error.message);
+        });
+    }
+}
+
+function fixAllSlugs() {
+    if (!confirm("සින්දු සියල්ලටම Slugs සෑදීම ආරම්භ කරන්නද?")) return;
+    
+    db.collection("hymns").get().then(snapshot => {
+        let count = 0;
+        snapshot.forEach(doc => {
+            let data = doc.data();
+            
+            // දැනටමත් slug එකක් නැත්නම් පමණක් අලුතින් සාදයි
+            if (!data.slug) {
+                let rawForSlug = data.singlish_title ? data.singlish_title : data.title;
+                if (rawForSlug) {
+                    let newSlug = rawForSlug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                    
+                    // Database එක යාවත්කාලීන කිරීම
+                    db.collection("hymns").doc(doc.id).update({ slug: newSlug })
+                      .then(() => console.log(newSlug + " - Updated"))
+                      .catch(err => console.error(err));
+                    count++;
+                }
+            }
+        });
+        alert(`සාර්ථකයි! සින්දු ${count} කට අලුතින් Slugs සෑදුවා. Database එක Update වීමට තත්පර කිහිපයක් දෙන්න.`);
+    });
+}
+
+function generateSitemap() {
+    db.collection("hymns").get().then(snapshot => {
+
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+        xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+        // Home Page
+        xml += `  <url>\n`;
+        xml += `    <loc>https://hymnvault.web.app/</loc>\n`;
+        xml += `    <changefreq>daily</changefreq>\n`;
+        xml += `    <priority>1.0</priority>\n`;
+        xml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+        xml += `  </url>\n`;
+
+        // Hymns
+        snapshot.forEach(doc => {
+            let data = doc.data();
+            let linkId = data.slug 
+                ? encodeURIComponent(data.slug) 
+                : doc.id;
+
+            xml += `  <url>\n`;
+            xml += `    <loc>https://hymnvault.web.app/hymn/${linkId}</loc>\n`;
+            xml += `    <changefreq>weekly</changefreq>\n`;
+            xml += `    <priority>0.8</priority>\n`;
+            xml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+            xml += `  </url>\n`;
+        });
+
+        xml += `</urlset>`;
+
+        navigator.clipboard.writeText(xml).then(() => {
+            alert("✅ Sitemap copied! Paste it into sitemap.xml");
+        }).catch(() => {
+            alert("❌ Copy failed. Try again.");
+        });
+
+    });
+}
+// =====================
+// Lyrics helper buttons
+// =====================
+
+// Mapping object: standard keys -> 6 basic diatonic family chords
+const DIATONIC_FAMILY_CHORDS = {
+  "C":  ["C", "Dm", "Em", "F", "G", "Am"],
+  "D":  ["D", "Em", "F#m", "G", "A", "Bm"],
+  "E":  ["E", "F#m", "G#m", "A", "B", "C#m"],
+  "F":  ["F", "Gm", "Am", "Bb", "C", "Dm"],
+  "G":  ["G", "Am", "Bm", "C", "D", "Em"],
+  "A":  ["A", "Bm", "C#m", "D", "E", "F#m"],
+  "B":  ["B", "C#m", "D#m", "E", "F#", "G#m"],
+  "Cm": ["Cm", "Ddim", "Eb", "Fm", "Gm", "Ab", "Bb"],
+  "Dm": ["Dm", "Edim", "F", "Gm", "Am", "Bb", "C"],
+  "Em": ["Em", "F#dim", "G", "Am", "Bm", "C", "D"],
+  "Fm": ["Fm", "Gdim", "Ab", "Bbm", "Cm", "Db", "Eb"],
+  "Gm": ["Gm", "Adim", "Bb", "Cm", "Dm", "Eb", "F"],
+  "Am": ["Am", "Bdim", "C", "Dm", "Em", "F", "G"],
+  "Bm": ["Bm", "C#dim", "D", "Em", "F#m", "G", "A"]
+};
+function getLyricsTextarea() {
+    return document.getElementById("lyrics");
+}
+
+function insertAtCursor(text) {
+    const textarea = getLyricsTextarea();
+    if (!textarea) return;
+
+    // Keep textarea focus and preserve selection/caret
+    textarea.focus();
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+
+    const before = textarea.value.substring(0, start);
+    const after = textarea.value.substring(end);
+    textarea.value = before + text + after;
+
+    const cursorPos = start + text.length;
+    textarea.setSelectionRange(cursorPos, cursorPos);
+}
+
+function insertSectionAtCursor(sectionName) {
+    const normalized = (sectionName === "Verse 1") ? "Verse 1" : sectionName;
+    insertAtCursor(`{${normalized}}\n`);
+}
+
+function insertChordBracketsAtCursor() {
+    const textarea = getLyricsTextarea();
+    if (!textarea) return;
+
+    textarea.focus();
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+
+    const before = textarea.value.substring(0, start);
+    const after = textarea.value.substring(end);
+
+    // Insert [] and place caret between them
+    textarea.value = before + "[]" + after;
+    const cursorPos = start + 1;
+    textarea.setSelectionRange(cursorPos, cursorPos);
+}
+
+function renderFamilyChordButtons() {
+    const container = document.getElementById("diatonicChordButtons");
+    const chordSelect = document.getElementById("chord");
+    if (!container || !chordSelect) return;
+
+    const currentKey = chordSelect.value || "C";
+    const family = DIATONIC_FAMILY_CHORDS[currentKey] || DIATONIC_FAMILY_CHORDS["C"];
+
+    container.innerHTML = "";
+
+    family.forEach(chName => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "lyrics-helper-btn";
+        btn.innerHTML = `<span class="lyrics-helper-btn-label">${chName}</span>`;
+        btn.addEventListener("click", () => {
+            insertAtCursor(`[${chName}]`);
+        });
+        container.appendChild(btn);
+    });
+}
+
+// Initial wiring for dynamic chord family buttons.
+// Must not interfere with existing code; uses addEventListener.
+(function attachLyricsHelperWiring() {
+    const chordSelect = document.getElementById("chord");
+    if (chordSelect) {
+        chordSelect.addEventListener("change", () => {
+            renderFamilyChordButtons();
+        });
+    }
+
+    // Ensure initial render (loadData/edit/reset will also call this).
+    // Use a microtask to allow DOM to settle.
+    Promise.resolve().then(() => renderFamilyChordButtons());
+})();
+
+// Ensure refresh during load/edit/reset
+// (These wrappers preserve existing functionality by only calling renderFamilyChordButtons.)
+const __originalLoadData = loadData;
+loadData = function() {
+    const result = __originalLoadData.apply(this, arguments);
+    // Render after async hymns load completes; also safe to call early.
+    setTimeout(() => renderFamilyChordButtons(), 0);
+    const ta = document.getElementById("lyrics");
+    if (ta) ta.focus();
+    renderFamilyChordButtons();
+    return result;
+};
+
+const __originalEditHymn = editHymn;
+editHymn = function(id) {
+    const result = __originalEditHymn.apply(this, arguments);
+    setTimeout(() => renderFamilyChordButtons(), 0);
+    return result;
+};
+
+const __originalResetForm = resetForm;
+resetForm = function() {
+    const result = __originalResetForm.apply(this, arguments);
+    setTimeout(() => renderFamilyChordButtons(), 0);
+    return result;
+};
+
+</script>
+
+
+</body>
+</html>

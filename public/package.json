@@ -1,0 +1,15 @@
+{
+  "name": "hymnvault-public",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "^0.18.0",
+    "postcss-cli": "^10.0.0",
+    "cssnano": "^6.0.0"
+  },
+  "scripts": {
+    "build:js": "esbuild script.js --minify --outfile=script.min.js && esbuild firebase-init.js --minify --outfile=firebase-init.min.js",
+    "build:css": "postcss style.css --use cssnano -o style.min.css",
+    "build": "npm run build:js && npm run build:css"
+  }
+}

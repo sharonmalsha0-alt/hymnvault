@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://hymnvault.web.app/login.html" />
+    <title>Login - Hymnvault</title>
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #0f172a; 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .login-box { 
+            background: #1e293b; 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid #334155; 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+            box-sizing: border-box; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border: 1px solid #475569; 
+            border-radius: 10px; 
+            background: #0f172a; 
+            color: white; 
+            box-sizing: border-box; 
+        }
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: #f59e0b; 
+            border: none; 
+            color: #000; 
+            font-weight: bold; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            font-size: 16px;
+        }
+        button:hover { 
+            background: #d97706; 
+        }
+        h2 { 
+            color: #f59e0b; 
+            margin-bottom: 20px; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Hymnvault Admin Login</h2>
+    <input type="email" id="email" placeholder="Enter Admin Email">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- Firebase Web SDK v8 (Auth එක වැඩ කරන්න මේවා ඕනේ) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+<script>
+// ඔයාගේ Firebase Config එක (admin.html එකේ තියෙන එකමයි)
+const firebaseConfig = {
+  apiKey: "AIzaSyBciJKI7vdGu9nFr0bMDuWO9mYUu0yeDCU",
+  authDomain: "hymnvault.firebaseapp.com",
+  projectId: "hymnvault",
+  storageBucket: "hymnvault.firebasestorage.app",
+  messagingSenderId: "397124269230",
+  appId: "1:397124269230:web:d9bd1bfec77c684f76293f",
+  measurementId: "G-QHGW23HV09"
+};
+
+// Firebase Initialize කිරීම
+firebase.initializeApp(firebaseConfig);
+
+function login() {
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value;
+
+    if(!email || !password) {
+        alert("කරුණාකර සියලුම විස්තර ඇතුලත් කරන්න!");
+        return;
+    }
+
+    // Firebase Auth හරහා Email සහ Password චෙක් කරනවා
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+        // සාර්ථකව ලොග් වුණොත් කෙලින්ම admin.html එකට එක්කන් යනවා
+        window.location.href = "admin.html";
+    })
+    .catch((error) => {
+        // වැරදි විස්තර දැම්මොත් Error එකක් පෙන්වනවා
+        alert("Login Failed: " + error.message);
+    });
+}
+</script>
+
+</body>
+</html>
